@@ -31,12 +31,17 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input")
 	UInputMappingContext* InputMappingContext;
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input")
 	UInputAction* MoveAction;
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input")
 	UInputAction* ShootAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement")
+	float MovementSpeed = 200.0f;
+	UPROPERTY(BlueprintReadWrite, Category="Movement")
+	FVector2D MovementDirection;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Movement")
+	bool CanMove = true;
 
 protected:
 	// Called when the game starts or when spawned
