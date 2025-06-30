@@ -20,6 +20,17 @@ ATopDownCharacter::ATopDownCharacter()
 void ATopDownCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	APlayerController* PlayerController = Cast<APlayerController>(Controller);
+	if (IsValid(PlayerController))
+	{
+		UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
+
+		if (IsValid(Subsystem))
+		{
+			Subsystem->AddMappingContext(InputMappingContext, 0);
+		}
+	}
 	
 }
 
@@ -35,5 +46,31 @@ void ATopDownCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
+	if (IsValid(EnhancedInputComponent))
+	{
+		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ATopDownCharacter::MoveTriggered);
+		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Completed, this, &ATopDownCharacter::MoveCompleted);
+		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Canceled, this, &ATopDownCharacter::MoveCompleted);
+
+		EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Started, this, &ATopDownCharacter::Shoot);
+		EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Triggered, this, &ATopDownCharacter::Shoot);
+	}
+}
+
+void ATopDownCharacter::MoveTriggered(const FInputActionValue& Value)
+{
+	FVector2D MoveActionValue = Value.Get<FVector2D>();
+	GEngine->AddOnScreenDebugMessage(-1 , 2, FColor::White, MoveActionValue.ToString());
+}
+
+void ATopDownCharacter::MoveCompleted(const FInputActionValue& Value)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Green, "Move Completed");
+}
+
+void ATopDownCharacter::Shoot(const FInputActionValue& Value)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Red, "Fire!");
 }
 

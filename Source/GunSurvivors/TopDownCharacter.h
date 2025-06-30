@@ -7,6 +7,10 @@
 
 #include "Components/CapsuleComponent.h"
 #include "PaperFlipbookComponent.h"
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
+#include "Components/InputComponent.h"
+#include "GameFramework/Controller.h"
 
 #include "TopDownCharacter.generated.h"
 
@@ -25,6 +29,15 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	UPaperFlipbookComponent* CharacterFlipbook;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input")
+	UInputMappingContext* InputMappingContext;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input")
+	UInputAction* MoveAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input")
+	UInputAction* ShootAction;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -35,5 +48,10 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	void MoveTriggered(const FInputActionValue& Value);
+	void MoveCompleted(const FInputActionValue& Value);
+
+	void Shoot(const FInputActionValue& Value);
 
 };
