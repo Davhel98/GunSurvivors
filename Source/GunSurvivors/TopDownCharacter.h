@@ -12,6 +12,8 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Components/InputComponent.h"
+#include "Engine/TimerHandle.h"
+#include "Bullet.h"
 #include "GameFramework/Controller.h"
 
 #include "TopDownCharacter.generated.h"
@@ -62,6 +64,14 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Movement")
 	bool CanMove = true;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Shooting")
+	bool CanShoot = true;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Shooting")
+	float ShootCooldownDuration = 0.3f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Shooting")
+	TSubclassOf<ABullet> BulletClassToSpawn;
+	FTimerHandle ShootCooldownTimer;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -80,5 +90,7 @@ public:
 
 	bool IsInMapBoundsHorizontal(float XPos) const;
 	bool IsInMapBoundsVertical(float ZPos) const;
+
+	void OnShootCooldownTimeout();
 
 };

@@ -146,7 +146,26 @@ void ATopDownCharacter::MoveCompleted(const FInputActionValue& Value)
 
 void ATopDownCharacter::Shoot(const FInputActionValue& Value)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Red, "Fire!");
+
+	if (!CanShoot) return;
+
+	CanShoot = false;
+
+	// Bullet spawning logic
+	if (!IsValid(BulletClassToSpawn))
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("BulletClassToSpawn is not set!"));
+		return;
+	}
+	// Spawn the bullet at the bullet spawn position
+	ABullet* Bullet = GetWorld()->SpawnActor<ABullet>(BulletClassToSpawn, BulletSpawnPosition->GetComponentLocation(), FRotator::ZeroRotator);
+
+	// Get the gun's direction and launch the bullet
+	FVector GunDirection = GunParent->GetComponentRotation().Vector();
+	Bullet->Launch(FVector2D(GunDirection.X, GunDirection.Z), Bullet->MovementSpeed);
+
+	// Set the shoot cooldown timer
+	GetWorldTimerManager().SetTimer(ShootCooldownTimer, this, &ATopDownCharacter::OnShootCooldownTimeout, 1, false, ShootCooldownDuration);
 }
 
 bool ATopDownCharacter::IsInMapBoundsHorizontal(float XPos) const
@@ -157,5 +176,10 @@ bool ATopDownCharacter::IsInMapBoundsHorizontal(float XPos) const
 bool ATopDownCharacter::IsInMapBoundsVertical(float ZPos) const
 {
 	return (ZPos > VerticalLimits.X && ZPos < VerticalLimits.Y);
+}
+
+void ATopDownCharacter::OnShootCooldownTimeout()
+{
+	CanShoot = true;
 }
 
