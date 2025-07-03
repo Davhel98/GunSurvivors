@@ -3,6 +3,8 @@
 
 #include "TopDownCharacter.h"
 
+#include "Kismet/KismetMathLibrary.h"
+
 // Sets default values
 ATopDownCharacter::ATopDownCharacter()
 {
@@ -14,6 +16,15 @@ ATopDownCharacter::ATopDownCharacter()
 
 	CharacterFlipbook = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("CharacterFlipbook"));
 	CharacterFlipbook->SetupAttachment(RootComponent);
+
+	GunParent = CreateDefaultSubobject<USceneComponent>(TEXT("GunParent"));
+	GunParent->SetupAttachment(RootComponent);
+
+	GunSprite = CreateDefaultSubobject<UPaperSpriteComponent>(TEXT("GunSprite"));
+	GunSprite->SetupAttachment(GunParent);
+
+	BulletSpawnPosition = CreateDefaultSubobject<USceneComponent>(TEXT("BulletSpawnPosition"));
+	BulletSpawnPosition->SetupAttachment(GunSprite);
 }
 
 // Called when the game starts or when spawned
@@ -24,6 +35,8 @@ void ATopDownCharacter::BeginPlay()
 	APlayerController* PlayerController = Cast<APlayerController>(Controller);
 	if (IsValid(PlayerController))
 	{
+		PlayerController->SetShowMouseCursor(true);
+		
 		UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
 
 		if (IsValid(Subsystem))
@@ -39,6 +52,7 @@ void ATopDownCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	// Move the character based on the movement direction and speed
 	if (CanMove)
 	{
 		if (MovementDirection.Length() > 0)
@@ -62,6 +76,25 @@ void ATopDownCharacter::Tick(float DeltaTime)
 			// Set the new location of the character
 			SetActorLocation(NewLocation);
 		}
+	}
+
+	// Rotate the gun to face the mouse cursor
+	APlayerController* PlayerController = Cast<APlayerController>(Controller);
+	if (IsValid(PlayerController))
+	{
+		// Get the mouse position in the world
+		FVector MouseWorldLocation, MouseWorldDirection;
+		PlayerController->DeprojectMousePositionToWorld(MouseWorldLocation, MouseWorldDirection);
+
+		// Get the current location of the character
+		FVector CurrentLocation = GetActorLocation();
+		// Create a start and target vector for the gun rotation
+		FVector Start = FVector(CurrentLocation.X, 0.0f, CurrentLocation.Z);
+		FVector Target = FVector(MouseWorldLocation.X, 0.0f, MouseWorldLocation.Z);
+		// Calculate the rotation needed to look at the mouse position
+		FRotator GunParentRotator = UKismetMathLibrary::FindLookAtRotation(Start, Target);
+
+		GunParent->SetRelativeRotation(GunParentRotator);
 	}
 }
 

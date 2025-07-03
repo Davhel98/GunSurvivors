@@ -6,6 +6,8 @@
 #include "GameFramework/Pawn.h"
 
 #include "Components/CapsuleComponent.h"
+#include "Components/SceneComponent.h"
+#include "PaperSpriteComponent.h"
 #include "PaperFlipbookComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -28,6 +30,13 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	UPaperFlipbookComponent* CharacterFlipbook;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Gun")
+	USceneComponent* GunParent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Gun")
+	UPaperSpriteComponent* GunSprite;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Gun")
+	USceneComponent* BulletSpawnPosition;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input")
 	UInputMappingContext* InputMappingContext;
