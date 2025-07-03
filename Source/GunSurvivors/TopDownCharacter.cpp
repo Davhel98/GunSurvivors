@@ -51,8 +51,15 @@ void ATopDownCharacter::Tick(float DeltaTime)
 			FVector2D DistanceToMove = MovementDirection * MovementSpeed * DeltaTime;
 
 			FVector CurrentLocation = GetActorLocation();
-			FVector NewLocation = CurrentLocation + FVector(DistanceToMove.X, 0.0f, DistanceToMove.Y);
+			// Check if the new location is within the horizontal and vertical bounds
+			// If the new location is out of bounds, set it to zero
+			float NewXLocation = IsInMapBoundsHorizontal(DistanceToMove.X + CurrentLocation.X) ? DistanceToMove.X : 0.0f;
+			float NewZLocation = IsInMapBoundsVertical(DistanceToMove.Y + CurrentLocation.Z) ? DistanceToMove.Y : 0.0f;
 
+			// Calculate the new location based on the current location and the distance to move
+			FVector NewLocation = CurrentLocation + FVector(NewXLocation, 0.0f, NewZLocation);
+
+			// Set the new location of the character
 			SetActorLocation(NewLocation);
 		}
 	}
@@ -107,5 +114,15 @@ void ATopDownCharacter::MoveCompleted(const FInputActionValue& Value)
 void ATopDownCharacter::Shoot(const FInputActionValue& Value)
 {
 	GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Red, "Fire!");
+}
+
+bool ATopDownCharacter::IsInMapBoundsHorizontal(float XPos) const
+{	
+	return (XPos > HorizontalLimits.X && XPos < HorizontalLimits.Y);
+}
+
+bool ATopDownCharacter::IsInMapBoundsVertical(float ZPos) const
+{
+	return (ZPos > VerticalLimits.X && ZPos < VerticalLimits.Y);
 }
 

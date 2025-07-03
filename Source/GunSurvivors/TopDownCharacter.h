@@ -40,6 +40,11 @@ public:
 	UPaperFlipbook* IdleFlipbook;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Flipbook")
 	UPaperFlipbook* RunFlipbook;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Bounds")
+	FVector2D HorizontalLimits;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Bounds")
+	FVector2D VerticalLimits;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement")
 	float MovementSpeed = 200.0f;
@@ -63,5 +68,8 @@ public:
 	void MoveCompleted(const FInputActionValue& Value);
 
 	void Shoot(const FInputActionValue& Value);
+
+	bool IsInMapBoundsHorizontal(float XPos) const;
+	bool IsInMapBoundsVertical(float ZPos) const;
 
 };
