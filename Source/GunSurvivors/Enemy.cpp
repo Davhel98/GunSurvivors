@@ -73,3 +73,21 @@ void AEnemy::Tick(float DeltaTime)
 	}
 }
 
+void AEnemy::Die()
+{
+	if (!IsAlive) return;
+
+	IsAlive = false;
+	CanFollow = false;
+
+	EnemyFlipbook->SetFlipbook(DeadFlipbook);
+	EnemyFlipbook->SetTranslucentSortPriority(-5);
+
+	GetWorldTimerManager().SetTimer(DestroyTimer, this, &AEnemy::OnDestroyTimerTimeout, 1.0f, false, 10.0f);
+}
+
+void AEnemy::OnDestroyTimerTimeout()
+{
+	Destroy(); // Destroy the enemy actor after a delay
+}
+

@@ -3,6 +3,8 @@
 
 #include "Bullet.h"
 
+#include "Enemy.h"
+
 // Sets default values
 ABullet::ABullet()
 {
@@ -22,6 +24,8 @@ ABullet::ABullet()
 void ABullet::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &ABullet::OverlapBegin);
 }
 
 // Called every frame
@@ -55,5 +59,31 @@ void ABullet::Launch(FVector2D Direction, float Speed)
 void ABullet::OnDeleteTimerTimeout()
 {
 	Destroy();
+}
+
+void ABullet::OverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	AEnemy* Enemy = Cast<AEnemy>(OtherActor);
+
+	if (IsValid(Enemy) && Enemy->IsAlive)
+	{
+		// Kill the enemy
+		Enemy->Die();
+
+		// Disable the bullet after hitting an enemy
+		DisableBullet();
+	}
+}
+
+void ABullet::DisableBullet()
+{
+	if (IsDisabled) return;
+
+	IsDisabled = true;
+
+	SphereComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	SpriteComponent->DestroyComponent();
 }
 
