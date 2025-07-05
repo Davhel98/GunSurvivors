@@ -29,6 +29,7 @@ void AEnemy::BeginPlay()
 		if (IsValid(ActorRef))
 		{
 			PlayerRef = Cast<ATopDownCharacter>(ActorRef);
+			CanFollow = true;
 		}
 	}
 }
@@ -38,5 +39,37 @@ void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (IsAlive && CanFollow && IsValid(PlayerRef))
+	{
+		// Move towards the player
+		FVector CurrentLocation = GetActorLocation();
+		FVector PlayerLocation = PlayerRef->GetActorLocation();
+
+		FVector DirectionToPlayer = PlayerLocation - CurrentLocation;
+		float DistanceToPlayer = DirectionToPlayer.Length();
+
+		if (DistanceToPlayer > StopDistance)
+		{
+			DirectionToPlayer.Normalize();
+
+			FVector NewLocation = CurrentLocation + (DirectionToPlayer * MovementSpeed * DeltaTime);
+			SetActorLocation(NewLocation);
+		}
+
+		// Face the player
+		CurrentLocation = GetActorLocation();
+		float FlipbookXScale = EnemyFlipbook->GetComponentScale().X;
+
+		if (PlayerLocation.X > CurrentLocation.X)
+		{
+			if (FlipbookXScale < 0.0f)
+				EnemyFlipbook->SetWorldScale3D(FVector(1, 1, 1));
+		}
+		else
+		{
+			if (FlipbookXScale > 0.0f)
+				EnemyFlipbook->SetWorldScale3D(FVector(-1, 1, 1));
+		}
+	}
 }
 

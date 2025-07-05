@@ -30,6 +30,17 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	ATopDownCharacter* PlayerRef;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool IsAlive = true;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool CanFollow = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement")
+	float MovementSpeed = 50.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement")
+	float StopDistance = 20.0f;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
