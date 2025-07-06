@@ -23,15 +23,7 @@ void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (!IsValid(PlayerRef))
-	{
-		AActor* ActorRef = UGameplayStatics::GetActorOfClass(GetWorld(), ATopDownCharacter::StaticClass());
-		if (IsValid(ActorRef))
-		{
-			PlayerRef = Cast<ATopDownCharacter>(ActorRef);
-			CanFollow = true;
-		}
-	}
+	
 }
 
 // Called every frame

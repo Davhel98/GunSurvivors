@@ -7,6 +7,7 @@
 #include "Engine/TimerHandle.h"
 
 #include "Enemy.h"
+#include "TopDownCharacter.h"
 
 #include "EnemySpawner.generated.h"
 
@@ -39,6 +40,8 @@ public:
 	UPROPERTY(EditAnywhere)
 	float SpawnTimerDecreaseFactor = 0.05f;
 
+	ATopDownCharacter* PlayerRef;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -51,5 +54,7 @@ public:
 	void StartSpawning();
 	void StopSpawning();
 	void SpawnEnemy();
+
+	void SetupEnemy(AEnemy* Enemy);
 
 };
