@@ -7,6 +7,7 @@
 #include "Engine/TimerHandle.h"
 
 #include "Enemy.h"
+#include "GunSurvivorGameMode.h"
 #include "TopDownCharacter.h"
 
 #include "EnemySpawner.generated.h"
@@ -19,6 +20,8 @@ class GUNSURVIVORS_API AEnemySpawner : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AEnemySpawner();
+
+	AGunSurvivorGameMode* GameModeRef;
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AEnemy> EnemyActorToSpawn;
@@ -56,5 +59,8 @@ public:
 	void SpawnEnemy();
 
 	void SetupEnemy(AEnemy* Enemy);
+
+	UFUNCTION()
+	void OnEnemyDied();
 
 };

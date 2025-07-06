@@ -75,6 +75,8 @@ void AEnemy::Die()
 	EnemyFlipbook->SetFlipbook(DeadFlipbook);
 	EnemyFlipbook->SetTranslucentSortPriority(-5);
 
+	EnemyDiedDelegate.Broadcast();
+
 	GetWorldTimerManager().SetTimer(DestroyTimer, this, &AEnemy::OnDestroyTimerTimeout, 1.0f, false, 10.0f);
 }
 
