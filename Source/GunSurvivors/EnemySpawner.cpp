@@ -44,6 +44,7 @@ void AEnemySpawner::StopSpawning()
 
 void AEnemySpawner::SpawnEnemy()
 {
+	// Spawn the enemy
 	FVector2D RandomPosition = FVector2D(FMath::VRand());
 	RandomPosition.Normalize();
 	RandomPosition *= SpawnDistance;
@@ -51,5 +52,15 @@ void AEnemySpawner::SpawnEnemy()
 	FVector SpawnLocation = GetActorLocation() + FVector(RandomPosition.X, 0.0f, RandomPosition.Y);
 	
 	AEnemy* SpawnedEnemy = GetWorld()->SpawnActor<AEnemy>(EnemyActorToSpawn, SpawnLocation, FRotator::ZeroRotator);
+
+	// Increase the difficulty
+	TotalEnemyCount++;
+	if (TotalEnemyCount % DifficultySpikeInterval == 0)
+	{
+		SpawnInterval = FMath::Max(SpawnTimeMinimumLimit, SpawnInterval - SpawnTimerDecreaseFactor);
+
+		StopSpawning();
+		StartSpawning();
+	}
 }
 

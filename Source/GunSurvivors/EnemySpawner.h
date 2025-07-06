@@ -30,6 +30,15 @@ public:
 
 	FTimerHandle SpawnTimer;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	int TotalEnemyCount = 0;
+	UPROPERTY(EditAnywhere)
+	int DifficultySpikeInterval = 10;
+	UPROPERTY(EditAnywhere)
+	float SpawnTimeMinimumLimit = 0.5f;
+	UPROPERTY(EditAnywhere)
+	float SpawnTimerDecreaseFactor = 0.05f;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
