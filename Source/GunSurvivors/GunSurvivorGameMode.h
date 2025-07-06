@@ -9,6 +9,7 @@
 /**
  * 
  */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FScoreChangedDelegate, int, NewScore);
 UCLASS()
 class GUNSURVIVORS_API AGunSurvivorGameMode : public AGameModeBase
 {
@@ -17,6 +18,9 @@ class GUNSURVIVORS_API AGunSurvivorGameMode : public AGameModeBase
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	int Score = 0;
+
+	UPROPERTY(BlueprintAssignable)
+	FScoreChangedDelegate ScoreChangedDelegate;
 
 	AGunSurvivorGameMode();
 	virtual void BeginPlay() override;
