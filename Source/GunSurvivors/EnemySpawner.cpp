@@ -44,7 +44,12 @@ void AEnemySpawner::StopSpawning()
 
 void AEnemySpawner::SpawnEnemy()
 {
-	FVector SpawnLocation = GetActorLocation();
+	FVector2D RandomPosition = FVector2D(FMath::VRand());
+	RandomPosition.Normalize();
+	RandomPosition *= SpawnDistance;
+	
+	FVector SpawnLocation = GetActorLocation() + FVector(RandomPosition.X, 0.0f, RandomPosition.Y);
+	
 	AEnemy* SpawnedEnemy = GetWorld()->SpawnActor<AEnemy>(EnemyActorToSpawn, SpawnLocation, FRotator::ZeroRotator);
 }
 

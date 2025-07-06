@@ -25,6 +25,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float SpawnInterval = 1.0f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float SpawnDistance = 500.0f;
+
 	FTimerHandle SpawnTimer;
 
 protected:
