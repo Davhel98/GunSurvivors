@@ -3,6 +3,7 @@
 
 #include "TopDownCharacter.h"
 
+#include "Enemy.h"
 #include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
@@ -44,6 +45,8 @@ void ATopDownCharacter::BeginPlay()
 			Subsystem->AddMappingContext(InputMappingContext, 0);
 		}
 	}
+
+	CapsuleComp->OnComponentBeginOverlap.AddDynamic(this, &ATopDownCharacter::OverlapBegin);
 	
 }
 
@@ -181,5 +184,22 @@ bool ATopDownCharacter::IsInMapBoundsVertical(float ZPos) const
 void ATopDownCharacter::OnShootCooldownTimeout()
 {
 	CanShoot = true;
+}
+
+void ATopDownCharacter::OverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	AEnemy* Enemy = Cast<AEnemy>(OtherActor);
+	if (IsValid(Enemy) && Enemy->IsAlive)
+	{
+		if (IsAlive)
+		{
+			IsAlive = false;
+			CanMove = false;
+			CanShoot = false;
+
+			PlayerDiedDelegate.Broadcast();
+		}
+	}
 }
 

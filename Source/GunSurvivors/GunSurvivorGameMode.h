@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "Engine/TimerHandle.h"
 #include "GunSurvivorGameMode.generated.h"
 
 /**
@@ -19,6 +20,10 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	int Score = 0;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float TimeBeforeRestart = 5.0f;
+	FTimerHandle RestartGameTimer;
+
 	UPROPERTY(BlueprintAssignable)
 	FScoreChangedDelegate ScoreChangedDelegate;
 
@@ -27,4 +32,7 @@ public:
 
 	void SetScore(int NewScore);
 	void AddScore(int AmountToAdd);
+
+	void RestartGame();
+	void OnRestartGameTimerTimeout();
 };
