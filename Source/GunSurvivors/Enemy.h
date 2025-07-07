@@ -50,6 +50,9 @@ public:
 
 	FEnemyDiedDelegate EnemyDiedDelegate;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Sound")
+	USoundBase* DieSound;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

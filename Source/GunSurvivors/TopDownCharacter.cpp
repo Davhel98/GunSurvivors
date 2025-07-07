@@ -5,6 +5,7 @@
 
 #include "Enemy.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ATopDownCharacter::ATopDownCharacter()
@@ -171,6 +172,8 @@ void ATopDownCharacter::Shoot(const FInputActionValue& Value)
 
 	// Set the shoot cooldown timer
 	GetWorldTimerManager().SetTimer(ShootCooldownTimer, this, &ATopDownCharacter::OnShootCooldownTimeout, 1, false, ShootCooldownDuration);
+
+	UGameplayStatics::PlaySound2D(GetWorld(), ShootSound);
 }
 
 bool ATopDownCharacter::IsInMapBoundsHorizontal(float XPos) const
@@ -200,6 +203,8 @@ void ATopDownCharacter::OverlapBegin(UPrimitiveComponent* OverlappedComponent, A
 			IsAlive = false;
 			CanMove = false;
 			CanShoot = false;
+
+			UGameplayStatics::PlaySound2D(GetWorld(), DieSound);
 
 			PlayerDiedDelegate.Broadcast();
 		}

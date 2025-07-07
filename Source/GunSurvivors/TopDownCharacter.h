@@ -15,6 +15,7 @@
 #include "Engine/TimerHandle.h"
 #include "Bullet.h"
 #include "GameFramework/Controller.h"
+#include "Sound/SoundBase.h"
 
 #include "TopDownCharacter.generated.h"
 
@@ -77,6 +78,11 @@ public:
 	bool IsAlive = true;
 
 	FPlayerDiedDelegate PlayerDiedDelegate;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Sounds")
+	USoundBase* ShootSound;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Sounds")
+	USoundBase* DieSound;
 
 protected:
 	// Called when the game starts or when spawned
