@@ -83,7 +83,7 @@ void ATopDownCharacter::Tick(float DeltaTime)
 
 	// Rotate the gun to face the mouse cursor
 	APlayerController* PlayerController = Cast<APlayerController>(Controller);
-	if (IsValid(PlayerController))
+	if (IsValid(PlayerController) && CanMove)
 	{
 		// Get the mouse position in the world
 		FVector MouseWorldLocation, MouseWorldDirection;
@@ -144,7 +144,9 @@ void ATopDownCharacter::MoveTriggered(const FInputActionValue& Value)
 void ATopDownCharacter::MoveCompleted(const FInputActionValue& Value)
 {
 	MovementDirection = FVector2D::ZeroVector;
-	CharacterFlipbook->SetFlipbook(IdleFlipbook);
+
+	if (IsAlive)
+		CharacterFlipbook->SetFlipbook(IdleFlipbook);
 }
 
 void ATopDownCharacter::Shoot(const FInputActionValue& Value)
@@ -183,7 +185,8 @@ bool ATopDownCharacter::IsInMapBoundsVertical(float ZPos) const
 
 void ATopDownCharacter::OnShootCooldownTimeout()
 {
-	CanShoot = true;
+	if (IsAlive)
+		CanShoot = true;
 }
 
 void ATopDownCharacter::OverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
